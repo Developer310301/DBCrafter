@@ -1,0 +1,9 @@
+[project]
+name = "dbcrafter"
+version = "0.1.0"
+dependencies = [
+    "pyqt6",
+]
+
+[tool.setuptools.packages.find]
+exclude = ["dbcrafter.test*"]  # empty by default
