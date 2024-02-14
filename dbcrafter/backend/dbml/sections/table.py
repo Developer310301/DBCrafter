@@ -2,6 +2,11 @@ from dbcrafter.backend.dbml.sections.columns.column import Columns
     
 
 class Table:
+    
+    @property
+    def complete_name(self) -> str:
+        return f"{self.schema+'.' if self.schema != 'public' else ''}{self.name}"
+    
     def __init__(self, name:str, schema: str = "public") -> None:
         self.name = name
         self.schema = schema
@@ -10,9 +15,9 @@ class Table:
         self.note = ""
     
     def __str__(self) -> str:
-        string = f"Table {self.schema+'.' if self.schema != 'public' else ''}{self.name} {{\n"
+        string = f"Table {self.complete_name} {{\n"
         string += f"\t{self.columns}\n"
-        string += f"\tNote: '{self.note}'\n"
+        string += f"\tNote: '{self.note}'\n" if self.note != "" else ""
         
         return string + "}"
     

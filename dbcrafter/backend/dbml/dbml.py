@@ -1,6 +1,7 @@
 from dbcrafter.backend.dbml.sections.project import *
 from dbcrafter.backend.dbml.sections.table import Tables, Table
 from dbcrafter.backend.dbml.sections.columns.column import Column
+from dbcrafter.backend.dbml.sections.reference import Reference, References, ReferenceType
 from dbcrafter.backend.dbml.dbml_parser import get_dbml_tokens
 
 class DBMLCrafter:
@@ -10,7 +11,7 @@ class DBMLCrafter:
         self.project.name = "database_name"
         self.project.database_type = DatabaseType.MYSQL
         self.tables = Tables()
-        self.references = []
+        self.references = References()
 
     @staticmethod
     def from_file(file_path: str) -> 'DBMLCrafter':
@@ -26,6 +27,7 @@ class DBMLCrafter:
         dbml.project.description = dbml_dict["project"]["projectNoteValue"]
         for table in dbml_dict["tables"]:
             t = Table(table["tableName"], table["schemaName"] if "schemaName" in table else "public")
+            t.note = table["tableNote"]
             for column in table["columns"]:
                 c = Column(column["columnName"], column["columnType"], int(column["dataLength"]) if "dataLength" in column else 0)
                 for setting in column["columnSettings"]:
@@ -40,6 +42,11 @@ class DBMLCrafter:
                         c.settings.add_setting(setting)
                 t.columns.add_column(c)
             dbml.tables.add_table(t)
+        
+        for reference in dbml_dict["references"]:
+            ref = Reference(reference["name"], dbml.tables[reference["first_column"]["table_name"],reference["first_column"]["schema"]], reference["first_column"]["column_name"], dbml.tables[reference["second_column"]["table_name"],reference["second_column"]["schema"]], reference["second_column"]["column_name"], ReferenceType.from_string(reference["relation_type"]))
+            dbml.references.add_reference(ref)
+        
         return dbml
     
     def to_file(self, file_path: str) -> None:
@@ -47,6 +54,6 @@ class DBMLCrafter:
             file.write(str(self))
     
     def __str__(self) -> str:
-        return f"""{self.project}\n{self.tables}"""
+        return f"""{self.project}\n{self.tables}\n{self.references}"""
     
     
