@@ -4,10 +4,11 @@ class ColumnSetting:
     def name(self) -> str:
         return self.__name
     
-    def __init__(self, name: str, value: str="", has_value: bool=True) -> None:
+    def __init__(self, name: str, value: str="", has_value: bool=True, type=None) -> None:
         self.__name = name
         self.value = value
         self.has_value = has_value
+        self.type = type
         
     def __eq__(self, __value: object) -> bool:
         if not isinstance(__value, ColumnSetting):
@@ -20,14 +21,15 @@ class ColumnSetting:
         return self.__name < __value.name
     
     def __str__(self) -> str:
-        return f"{self.__name}{': '+self.value if self.has_value else ''}"
+        quoted_value = f"'{self.value}'" if self.type == str else self.value
+        return f"{self.__name}{': '+quoted_value if self.has_value else ''}"
     
 #defining macros for the allowed settings and if they have a value
 # the key is the setting name and the value is a tuple with the setting value and if it has a value
 # for example: ColumnSettingMacros["primary_key"] -> ("primary_key", False)
 
 ColumnSettingMacros = {
-    "note": ColumnSetting(name="note",value="", has_value=True),
+    "note": ColumnSetting(name="note",value="", has_value=True, type=str),
     "pk": ColumnSetting(name="pk", value="", has_value=False),
     "unique": ColumnSetting(name="unique", value="", has_value=False),
     "default": ColumnSetting(name="default", value="", has_value=True),

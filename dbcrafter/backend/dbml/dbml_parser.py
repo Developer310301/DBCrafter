@@ -1,6 +1,7 @@
 from pyparsing import *
 
 identifier = Word(alphas + "_", alphanums + "_")
+number = Word(nums)
 spaced_identifier = Combine(ZeroOrMore(identifier + " "))
 project_keyword = Suppress(CaselessKeyword("Project"))
 name_keyword = Suppress(CaselessKeyword("name"))
@@ -9,6 +10,7 @@ table_keyword = Suppress(CaselessKeyword("Table"))
 string_literal = QuotedString("'")
 bracket = Suppress(Literal("{") | Literal("}"))
 square_bracket = Suppress(Literal("[") | Literal("]"))
+round_bracket = Suppress(Literal("(") | Literal(")"))
 double_point = Suppress(Literal(":"))
 
 # project
@@ -19,7 +21,7 @@ project_definition = Group(project_keyword + identifier.setResultsName("projectN
 #table
 column_setting = Combine(identifier + Optional(Or([Literal(" ") + identifier, Literal(":") + Optional(ZeroOrMore(Literal(" "))) + Or([identifier, string_literal])])))
 column_settings = Group(Optional(square_bracket+ZeroOrMore(delimitedList(OneOrMore(column_setting), delim=","))+square_bracket))
-column = Group(identifier.setResultsName("columnName") + identifier.setResultsName("columnType") + column_settings.setResultsName("columnSettings"))
+column = Group(identifier.setResultsName("columnName") + identifier.setResultsName("columnType") + Optional(round_bracket + number.setResultsName("dataLength") + round_bracket) + column_settings.setResultsName("columnSettings"))
 columns = ZeroOrMore(column)
 table = Group(table_keyword + identifier.setResultsName("tableName") + bracket + columns.setResultsName("columns") + bracket)
 tables = ZeroOrMore(table)
@@ -55,6 +57,7 @@ def get_dbml_tokens(content_string: str):
             for column_tokens in table_tokens.columns:
                 column = {
                     "columnName": column_tokens.columnName,
+                    "dataLength": column_tokens.dataLength if "dataLength" in column_tokens else 0,
                     "columnType": column_tokens.columnType,
                     "columnSettings": []
                 }

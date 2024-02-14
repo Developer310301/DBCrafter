@@ -27,13 +27,15 @@ class DBMLCrafter:
         for table in dbml_dict["tables"]:
             t = Table(table["tableName"])
             for column in table["columns"]:
-                c = Column(column["columnName"], column["columnType"])
+                c = Column(column["columnName"], column["columnType"], int(column["dataLength"]) if "dataLength" in column else 0)
                 for setting in column["columnSettings"]:
                     if ":" in setting:
                         setting_splitted = setting.split(":")
                         c.settings.add_setting(setting_splitted[0])
                         #remove leading and trailing whitespaces
                         c.settings[setting_splitted[0]].value = str(setting_splitted[1]).strip()
+                        if "char" in c.data_type or "text" in c.data_type:
+                            c.settings[setting_splitted[0]].type = str
                     else:
                         c.settings.add_setting(setting)
                 t.columns.add_column(c)

@@ -12,7 +12,7 @@ if __name__ == "__main__":
     }
     Table users {
         id int [pk, increment, not null, unique, note: 'aas dfasdfasdfsdf']
-        name varchar
+        name varchar(100)
         email varchar
         created_at timestamp
         updated_at timestamp

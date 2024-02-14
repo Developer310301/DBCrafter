@@ -42,9 +42,10 @@ class Columns:
 
 class Column:
     
-    def __init__(self, name: str, data_type: str) -> None:
+    def __init__(self, name: str, data_type: str, data_lenght: int = 0) -> None:
         self.name = name
         self.data_type = data_type
+        self.data_length = data_lenght
         self.settings = ColumnSettings()
         
     @staticmethod
@@ -53,7 +54,7 @@ class Column:
         
     # is a string in the format {name} {data_type} {settings}
     def __str__(self) -> str:
-        return f"{self.name} {self.data_type} {self.settings}"
+        return f"{self.name} {self.data_type}{'('+str(self.data_length)+')' if self.data_length>0 else ''} {self.settings}"
     
     def __eq__(self, __value: object) -> bool:
         if isinstance(__value, Column):
