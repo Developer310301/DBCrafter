@@ -1,18 +1,23 @@
 from dbcrafter.backend.dbml.dbml import DBMLCrafter, DatabaseType
 from dbcrafter.backend.dbml.sections.table import Table
 from dbcrafter.backend.dbml.sections.columns.column import *
+from dbcrafter.backend.dbml.dbml_parser import get_dbml_tokens
 
 if __name__ == "__main__":
-    dbml = DBMLCrafter()
-    dbml.project.name = "TestDB"
-    dbml.project.database_type = DatabaseType.POSTGRES
-    dbml.project.description = "This is a test database"
-    dbml.tables.add_table(Table("test_table"))
-    dbml.tables["test_table"].columns.add_column(Column("id", "int"))
-    dbml.tables["test_table"].columns.add_column(Column("name", "varchar"))
-    dbml.tables["test_table"].columns["id"].settings.add_setting("pk")
-    dbml.tables["test_table"].columns["id"].settings.add_setting("not null")
-    dbml.tables.add_table(Table("test_table", "test_schema"))
-    dbml.tables["test_table", "test_schema"].columns.add_column(Column("id", "int"))
-    dbml.tables["test_table", "test_schema"].note = "This is a test table"
-    print(dbml)
+
+    dbml = """
+    Project MyProject {
+        name: 'MySampleDB'
+        Note: 'This is my sample DBML project'
+    }
+    Table users {
+        id int [pk, increment, not null, unique, note: 'aas dfasdfasdfsdf']
+        name varchar
+        email varchar
+        created_at timestamp
+        updated_at timestamp
+    }
+    """
+    
+    dbml_crafter = DBMLCrafter.from_string(dbml)
+    print(dbml_crafter)

@@ -6,7 +6,6 @@ class Columns:
         self.columns = []
     
     def __str__(self) -> str:
-        #return f"[{'\n\t'.join([str(column) for column in self.columns])}]" using str.format
         return str.format("{0}", '\n\t'.join([str(column) for column in self.columns]))
     
     def add_column(self, column: 'Column') -> None:

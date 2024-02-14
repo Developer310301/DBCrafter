@@ -3,6 +3,7 @@ name = "dbcrafter"
 version = "0.1.0"
 dependencies = [
     "pyqt6",
+    "pyparsing"
 ]
 
 [tool.setuptools.packages.find]
