@@ -25,7 +25,7 @@ class DBMLCrafter:
         dbml.project.name = dbml_dict["project"]["projectNameValue"]
         dbml.project.description = dbml_dict["project"]["projectNoteValue"]
         for table in dbml_dict["tables"]:
-            t = Table(table["tableName"])
+            t = Table(table["tableName"], table["schemaName"] if "schemaName" in table else "public")
             for column in table["columns"]:
                 c = Column(column["columnName"], column["columnType"], int(column["dataLength"]) if "dataLength" in column else 0)
                 for setting in column["columnSettings"]:

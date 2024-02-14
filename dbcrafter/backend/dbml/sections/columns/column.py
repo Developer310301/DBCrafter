@@ -50,7 +50,7 @@ class Column:
         
     @staticmethod
     def allowed_data_types() -> list[str]:
-        return ["int", "varchar", "text", "timestamp", "boolean", "json", "jsonb", "uuid", "byte", "short", "long", "float", "double", "decimal", "date", "time", "datetime", "binary", "blob", "clob", "array", "enum", "set", "geometry", "point", "linestring", "polygon", "multipoint", "multilinestring", "multipolygon", "geometrycollection"]
+        return ["int", "integer", "varchar", "text", "timestamp", "boolean", "json", "jsonb", "uuid", "byte", "short", "long", "float", "double", "decimal", "date", "time", "datetime", "binary", "blob", "clob", "array", "enum", "set", "geometry", "point", "linestring", "polygon", "multipoint", "multilinestring", "multipolygon", "geometrycollection"]
         
     # is a string in the format {name} {data_type} {settings}
     def __str__(self) -> str:

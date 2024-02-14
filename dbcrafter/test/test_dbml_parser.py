@@ -10,7 +10,7 @@ if __name__ == "__main__":
         name: 'MySampleDB'
         Note: 'This is my sample DBML project'
     }
-    Table users {
+    Table db.users {
         id int [pk, increment, not null, unique, note: 'aas dfasdfasdfsdf']
         name varchar(100)
         email varchar

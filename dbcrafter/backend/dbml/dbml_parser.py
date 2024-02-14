@@ -12,6 +12,7 @@ bracket = Suppress(Literal("{") | Literal("}"))
 square_bracket = Suppress(Literal("[") | Literal("]"))
 round_bracket = Suppress(Literal("(") | Literal(")"))
 double_point = Suppress(Literal(":"))
+dot_point = Suppress(Literal("."))
 
 # project
 project_definition = Group(project_keyword + identifier.setResultsName("projectName") + bracket + \
@@ -23,7 +24,7 @@ column_setting = Combine(identifier + Optional(Or([Literal(" ") + identifier, Li
 column_settings = Group(Optional(square_bracket+ZeroOrMore(delimitedList(OneOrMore(column_setting), delim=","))+square_bracket))
 column = Group(identifier.setResultsName("columnName") + identifier.setResultsName("columnType") + Optional(round_bracket + number.setResultsName("dataLength") + round_bracket) + column_settings.setResultsName("columnSettings"))
 columns = ZeroOrMore(column)
-table = Group(table_keyword + identifier.setResultsName("tableName") + bracket + columns.setResultsName("columns") + bracket)
+table = Group(table_keyword + Optional(identifier.setResultsName("schemaName")+dot_point) + identifier.setResultsName("tableName") + bracket + columns.setResultsName("columns") + bracket)
 tables = ZeroOrMore(table)
 
 # dbml file
@@ -52,6 +53,7 @@ def get_dbml_tokens(content_string: str):
         for table_tokens in tokens.tables:
             table = {
                 "tableName": table_tokens.tableName,
+                "schemaName": "public" if "schemaName" not in table_tokens else table_tokens.schemaName,
                 "columns": []
             }
             for column_tokens in table_tokens.columns:
