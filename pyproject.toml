@@ -8,3 +8,7 @@ dependencies = [
 
 [tool.setuptools.packages.find]
 exclude = ["dbcrafter.test*"]  # empty by default
+
+#add launcher scripts
+[project.scripts]
+dbcrafter = "dbcrafter.backend.gui.dbml_gui_launcher:main"
